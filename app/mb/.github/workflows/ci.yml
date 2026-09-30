@@ -1,0 +1,24 @@
+name: Build e Push Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build e Push image
+        run: |
+          docker build -t ${{ secrets.REPO }}/crypto-ticker:latest .
+          docker push ${{ secrets.REPO }}/crypto-ticker:latest
